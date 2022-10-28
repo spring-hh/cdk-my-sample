@@ -6,6 +6,7 @@ import { RdsSingle } from "../lib/rds-single";
 import { RdsMulti } from "../lib/rds-multi";
 import { RdsSingleReplica } from "../lib/rds-single-replica";
 import { WebAcl } from "../lib/web-acl";
+import { Ec2 } from "../lib/ec2";
 
 const app = new cdk.App();
 // new CdkMySampleStack(app, "CdkMySampleStack");
@@ -14,3 +15,4 @@ const app = new cdk.App();
 // new RdsMulti(app, "RdsMulti");
 // new RdsSingleReplica(app, "RdsSingleReplica");
 // new WebAcl(app, "WebAcl");
+// new Ec2(app, "Ec2");
