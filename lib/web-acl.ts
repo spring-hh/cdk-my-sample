@@ -2,7 +2,7 @@ import { Duration, Stack, StackProps, RemovalPolicy } from "aws-cdk-lib";
 import * as wafv2 from "aws-cdk-lib/aws-wafv2";
 import { Construct } from "constructs";
 
-export class Waf extends Stack {
+export class WebAcl extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
