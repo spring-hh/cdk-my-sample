@@ -10,6 +10,7 @@ import { Ec2 } from "../lib/ec2";
 import { Ec2FromAmi } from "../lib/ec2-from-ami";
 import { WafAlbEc2Rds } from "../lib/waf-alb-ec2-rds";
 import { SnsEmailEnv } from "../lib/sns-email-env";
+import { BridgeSnsEmailEnv } from "../lib/bridge-sns-email-env";
 
 const app = new cdk.App();
 // new CdkMySampleStack(app, "CdkMySampleStack");
@@ -22,3 +23,4 @@ const app = new cdk.App();
 // new Ec2FromAmi(app, "Ec2FromAmi");
 // new WafAlbEc2Rds(app, "WafAlbEc2Rds");
 // new SnsEmailEnv(app, "SnsEmailEnv");
+// new BridgeSnsEmailEnv(app, "BridgeSnsEmailEnv");
