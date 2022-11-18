@@ -12,6 +12,7 @@ import { WafAlbEc2Rds } from "../lib/waf-alb-ec2-rds";
 import { SnsEmailEnv } from "../lib/sns-email-env";
 import { BridgeSnsEmailEnv } from "../lib/bridge-sns-email-env";
 import { FargateEcsp } from "../lib/fargate-ecsp";
+import { Pipeline1 } from "../lib/pipeline-1";
 
 const app = new cdk.App();
 // const stack = new CdkMySampleStack(app, "CdkMySampleStack");
@@ -26,4 +27,5 @@ const app = new cdk.App();
 // const stack = new SnsEmailEnv(app, "SnsEmailEnv");
 // const stack = new BridgeSnsEmailEnv(app, "BridgeSnsEmailEnv");
 // const stack = new FargateEcsp(app, "FargateEcsp");
-// cdk.Tags.of(stack).add("Project", "sample");
+const stack = new Pipeline1(app, "Pipeline1");
+cdk.Tags.of(stack).add("Project", "sample");
