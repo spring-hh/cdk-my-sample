@@ -1,0 +1,13 @@
+version: 0.2
+
+env:
+  variables:
+    NODE_ENV: "production"
+
+phases:
+  install:
+    commands:
+      - npm i
+  build:
+    commands:
+      - npm run build
