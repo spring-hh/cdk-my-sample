@@ -91,6 +91,7 @@ export class Pipeline1 extends Stack {
       buildSpec: codebuild.BuildSpec.fromSourceFilename("buildspec.yml"),
       environment: {
         privileged: true,
+        buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
       },
     });
 

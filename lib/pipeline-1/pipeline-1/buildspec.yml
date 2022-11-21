@@ -8,9 +8,7 @@ phases:
   install:
     commands:
       - node -v
-      - nvm -v
-      - nvm install 18.12.1
-      - nvm use 18.12.1
+      - n 18.12.1
       - node -v
       - npm i
   build:
