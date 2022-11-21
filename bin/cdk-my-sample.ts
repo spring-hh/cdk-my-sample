@@ -27,5 +27,5 @@ const app = new cdk.App();
 // const stack = new SnsEmailEnv(app, "SnsEmailEnv");
 // const stack = new BridgeSnsEmailEnv(app, "BridgeSnsEmailEnv");
 // const stack = new FargateEcsp(app, "FargateEcsp");
-const stack = new Pipeline1(app, "Pipeline1");
-cdk.Tags.of(stack).add("Project", "sample");
+// const stack = new Pipeline1(app, "Pipeline1");
+// cdk.Tags.of(stack).add("Project", "sample");
