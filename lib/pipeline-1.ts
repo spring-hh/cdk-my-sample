@@ -70,6 +70,12 @@ export class Pipeline1 extends Stack {
           Action: ["s3:GetBucketAcl", "s3:GetBucketLocation"],
           Resource: ["*"],
         },
+        {
+          Sid: "SSMGetParameterPolicy",
+          Effect: "Allow",
+          Action: ["ssm:GetParameter"],
+          Resource: ["*"],
+        },
       ],
     };
 
@@ -92,6 +98,33 @@ export class Pipeline1 extends Stack {
       environment: {
         privileged: true,
         buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
+      },
+      // environmentVariables type: parameter
+      environmentVariables: {
+        DOCKER_USER: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/docker/user",
+        },
+        DOCKER_PASS: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/docker/pass",
+        },
+        AWS_DEFAULT_REGION: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/codebuild/region",
+        },
+        AWS_ACCOUNT_ID: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/codebuild/account",
+        },
+        IMAGE_REPO_NAME: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/codebuild/repo",
+        },
+        IMAGE_TAG: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/codebuild/tag",
+        },
       },
     });
 
