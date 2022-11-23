@@ -6,11 +6,27 @@ import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
+import { createRoles } from "./components/createRoles";
+import { createSGs } from "./components/createSGs";
+import { createVpc } from "./components/createVpc";
 import { Construct } from "constructs";
 
 export class Pipeline1 extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+
+    // VPC作成
+    const vpc: ec2.Vpc = new createVpc(this).createVpc();
+
+    // Role作成
+    const codebuildRole: iam.Role = new createRoles(this).createCodebuildRole();
+    const taskRole: iam.Role = new createRoles(this).createTaskRole();
+    const executionRole: iam.Role = new createRoles(this).createExecutionRole();
+
+    // Security Group作成
+    const sg3000: ec2.SecurityGroup = new createSGs(this, vpc).createSg3000();
+    const sg80: ec2.SecurityGroup = new createSGs(this, vpc).createSg80();
 
     // codecommit
     const repo = new codecommit.Repository(this, "repo", {
@@ -22,72 +38,6 @@ export class Pipeline1 extends Stack {
     const ecrrepo = new ecr.Repository(this, "ecrrepo", {
       repositoryName: "ecrrepo",
       removalPolicy: RemovalPolicy.DESTROY,
-    });
-
-    // policy for codebuild role
-    const policyDocument = {
-      Version: "2012-10-17",
-      Statement: [
-        {
-          Sid: "CloudWatchLogsPolicy",
-          Effect: "Allow",
-          Action: ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
-          Resource: ["*"],
-        },
-        {
-          Sid: "CodeCommitPolicy",
-          Effect: "Allow",
-          Action: ["codecommit:GitPull"],
-          Resource: ["*"],
-        },
-        {
-          Sid: "S3GetObjectPolicy",
-          Effect: "Allow",
-          Action: ["s3:GetObject", "s3:GetObjectVersion"],
-          Resource: ["*"],
-        },
-        {
-          Sid: "S3PutObjectPolicy",
-          Effect: "Allow",
-          Action: ["s3:PutObject"],
-          Resource: ["*"],
-        },
-        {
-          Sid: "ECRPullPolicy",
-          Effect: "Allow",
-          Action: ["ecr:BatchCheckLayerAvailability", "ecr:GetDownloadUrlForLayer", "ecr:BatchGetImage"],
-          Resource: ["*"],
-        },
-        {
-          Sid: "ECRAuthPolicy",
-          Effect: "Allow",
-          Action: ["ecr:GetAuthorizationToken"],
-          Resource: ["*"],
-        },
-        {
-          Sid: "S3BucketIdentity",
-          Effect: "Allow",
-          Action: ["s3:GetBucketAcl", "s3:GetBucketLocation"],
-          Resource: ["*"],
-        },
-        {
-          Sid: "SSMGetParameterPolicy",
-          Effect: "Allow",
-          Action: ["ssm:GetParameter"],
-          Resource: ["*"],
-        },
-      ],
-    };
-
-    const customPolicyDocument = iam.PolicyDocument.fromJson(policyDocument);
-    const newManagedPolicy = new iam.ManagedPolicy(this, "codebuildPolicy", {
-      document: customPolicyDocument,
-    });
-
-    const codebuildRole = new iam.Role(this, "codebuildRole", {
-      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
-      description: "codebuildRole",
-      managedPolicies: [newManagedPolicy, iam.ManagedPolicy.fromManagedPolicyArn(this, "managedECR", "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser")],
     });
 
     // codebuild
