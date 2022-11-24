@@ -15,7 +15,6 @@ phases:
     commands:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
   build:
     commands:
       - npm run build
@@ -24,5 +23,5 @@ phases:
   post_build:
     commands:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - aws ecs describe-task-definition --task-definition ${TASKDEF} | jq '.taskDefinition | del(.taskDefinitionArn, .status, .requiresAttributes, .compatibilities, .revision)' | jq '(.containerDefinitions[] | select(.name == "'${IMAGE_REPO_NAME}'")).image = "'${REPOSITORY_URI}:${IMAGE_TAG}'"' > /tmp/taskdef.json
-      - aws ecs register-task-definition --cli-input-json file:///tmp/taskdef.json
+      - aws ecs describe-task-definition --task-definition ${TASKDEF} | jq '.taskDefinition | del (.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' > taskdef.json
+      - aws ecs register-task-definition --cli-input-json fileb://taskdef.json
