@@ -9,6 +9,7 @@ export interface Props {
   taskRole: iam.Role;
   executionRole: iam.Role;
   serviceName: string;
+  familyName: string;
 }
 
 export class createTaskBase {
@@ -47,6 +48,8 @@ export class createTaskBase {
 
   private createTaskDef() {
     this.taskDefinition = new ecs.FargateTaskDefinition(this.stack, `${this.props.serviceName}ServiceTaskDef`, {
+      // name for task
+      family: `${this.props.familyName}`,
       memoryLimitMiB: 512,
       cpu: 256,
       taskRole: this.taskRole,

@@ -47,6 +47,7 @@ export class Pipeline1 extends Stack {
       taskRole: taskRole,
       executionRole: executionRole,
       serviceName: "service",
+      familyName: "taskdef",
     });
 
     // add container to task definition
@@ -97,6 +98,10 @@ export class Pipeline1 extends Stack {
         IMAGE_TAG: {
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: "/codebuild/tag",
+        },
+        TASKDEF: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/codebuild/taskdef",
         },
       },
     });
