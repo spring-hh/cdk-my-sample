@@ -110,6 +110,21 @@ export class createRoles {
           Action: ["ssm:GetParameter"],
           Resource: ["*"],
         },
+        {
+          Effect: "Allow",
+          Action: ["ecs:*"],
+          Resource: "*",
+        },
+        {
+          Action: "iam:PassRole",
+          Effect: "Allow",
+          Resource: ["*"],
+          Condition: {
+            StringLike: {
+              "iam:PassedToService": "ecs-tasks.amazonaws.com",
+            },
+          },
+        },
       ],
     };
 
