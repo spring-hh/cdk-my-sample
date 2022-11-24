@@ -10,6 +10,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { createRoles } from "./components/createRoles";
 import { createSGs } from "./components/createSGs";
 import { createVpc } from "./components/createVpc";
+import { createTaskBase } from "./components/createTaskBase";
 import { Construct } from "constructs";
 
 export class Pipeline1 extends Stack {
@@ -38,6 +39,28 @@ export class Pipeline1 extends Stack {
     const ecrrepo = new ecr.Repository(this, "ecrrepo", {
       repositoryName: "ecrrepo",
       removalPolicy: RemovalPolicy.DESTROY,
+    });
+
+    // task definition
+    const task = new createTaskBase(this, {
+      vpc: vpc,
+      taskRole: taskRole,
+      executionRole: executionRole,
+      serviceName: "service",
+    });
+
+    // add container to task definition
+    task.taskDefinition.addContainer("container", {
+      containerName: "container",
+      image: ecs.ContainerImage.fromEcrRepository(ecr.Repository.fromRepositoryName(this, "service", "ecrrepo")),
+      logging: task.logDriver,
+      portMappings: [
+        {
+          containerPort: 3000,
+          hostPort: 3000,
+          protocol: ecs.Protocol.TCP,
+        },
+      ],
     });
 
     // codebuild
