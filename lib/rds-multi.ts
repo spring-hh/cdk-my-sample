@@ -1,6 +1,7 @@
 import { Duration, Stack, StackProps, RemovalPolicy } from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as rds from "aws-cdk-lib/aws-rds";
+import { createVpc } from "./components/createVpc";
 import { Construct } from "constructs";
 
 export class RdsMulti extends Stack {
@@ -8,25 +9,7 @@ export class RdsMulti extends Stack {
     super(scope, id, props);
 
     // VPC
-    const vpc = new ec2.Vpc(this, "vpc", {
-      cidr: "10.0.0.0/16",
-      defaultInstanceTenancy: ec2.DefaultInstanceTenancy.DEFAULT,
-      enableDnsSupport: true,
-      enableDnsHostnames: true,
-      maxAzs: 2,
-      subnetConfiguration: [
-        {
-          name: "public",
-          cidrMask: 24,
-          subnetType: ec2.SubnetType.PUBLIC,
-        },
-        {
-          name: "private",
-          cidrMask: 24,
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-        },
-      ],
-    });
+    const vpc: ec2.Vpc = new createVpc(this).createVpc();
 
     // Security Group for EC2 (dummy)
     const ec2Sg = new ec2.SecurityGroup(this, "ec2Sg", {

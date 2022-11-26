@@ -3,6 +3,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as target from "aws-cdk-lib/aws-elasticloadbalancingv2-targets";
 import * as rds from "aws-cdk-lib/aws-rds";
+import { createVpc } from "./components/createVpc";
 import { Construct } from "constructs";
 
 export class AlbEc2Rds extends Stack {
@@ -10,25 +11,7 @@ export class AlbEc2Rds extends Stack {
     super(scope, id, props);
 
     // VPC
-    const vpc = new ec2.Vpc(this, "vpc", {
-      cidr: "10.0.0.0/16",
-      defaultInstanceTenancy: ec2.DefaultInstanceTenancy.DEFAULT,
-      enableDnsSupport: true,
-      enableDnsHostnames: true,
-      maxAzs: 2,
-      subnetConfiguration: [
-        {
-          name: "public",
-          cidrMask: 24,
-          subnetType: ec2.SubnetType.PUBLIC,
-        },
-        {
-          name: "private",
-          cidrMask: 24,
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-        },
-      ],
-    });
+    const vpc: ec2.Vpc = new createVpc(this).createVpc();
 
     // Security Group for ALB
     const albSg = new ec2.SecurityGroup(this, "albSg", {

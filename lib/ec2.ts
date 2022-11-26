@@ -1,31 +1,14 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
+import { createVpc } from "./components/createVpc";
 
 export class Ec2 extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // VPC
-    const vpc = new ec2.Vpc(this, "vpc", {
-      cidr: "10.0.0.0/16",
-      defaultInstanceTenancy: ec2.DefaultInstanceTenancy.DEFAULT,
-      enableDnsSupport: true,
-      enableDnsHostnames: true,
-      maxAzs: 2,
-      subnetConfiguration: [
-        {
-          name: "public",
-          cidrMask: 24,
-          subnetType: ec2.SubnetType.PUBLIC,
-        },
-        {
-          name: "private",
-          cidrMask: 24,
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-        },
-      ],
-    });
+    const vpc: ec2.Vpc = new createVpc(this).createVpc();
 
     // Security Group for EC2
     const ec2Sg = new ec2.SecurityGroup(this, "ec2Sg", {

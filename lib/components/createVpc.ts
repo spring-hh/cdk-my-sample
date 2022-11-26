@@ -10,7 +10,7 @@ export class createVpc {
 
   public createVpc() {
     const vpc = new ec2.Vpc(this.stack, "vpc", {
-      cidr: "10.0.0.0/16",
+      ipAddresses: ec2.IpAddresses.cidr("10.0.0.0/16"),
       defaultInstanceTenancy: ec2.DefaultInstanceTenancy.DEFAULT,
       enableDnsSupport: true,
       enableDnsHostnames: true,
