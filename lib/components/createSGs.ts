@@ -22,6 +22,18 @@ export class createSGs {
     return Sg80;
   }
 
+  public createSg8000() {
+    const Sg8000 = new ec2.SecurityGroup(this.stack, "Sg8000", {
+      vpc: this.vpc,
+      description: "Allow tcp8000 access",
+      allowAllOutbound: true,
+      disableInlineRules: true,
+    });
+    Sg8000.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(8000), "Allow tcp8000 access");
+
+    return Sg8000;
+  }
+
   public createSg3000() {
     const Sg3000 = new ec2.SecurityGroup(this.stack, "Sg3000", {
       vpc: this.vpc,
