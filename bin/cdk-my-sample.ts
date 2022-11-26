@@ -13,6 +13,7 @@ import { SnsEmailEnv } from "../lib/sns-email-env";
 import { BridgeSnsEmailEnv } from "../lib/bridge-sns-email-env";
 import { FargateEcsp } from "../lib/fargate-ecsp";
 import { Pipeline1 } from "../lib/pipeline-1";
+import { Codeguru } from "../lib/codeguru";
 
 const app = new cdk.App();
 // const stack = new CdkMySampleStack(app, "CdkMySampleStack");
@@ -29,3 +30,5 @@ const app = new cdk.App();
 // const stack = new FargateEcsp(app, "FargateEcsp");
 const stack = new Pipeline1(app, "Pipeline1");
 cdk.Tags.of(stack).add("Project", "sample");
+const stack2 = new Codeguru(app, "Codeguru");
+cdk.Tags.of(stack2).add("Project", "sample");
